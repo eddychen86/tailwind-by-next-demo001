@@ -1,3 +1,13 @@
+### Gemini Chat
+---
+
+# How to Use?
+1. Sign in your google, and go to: https://makersuite.google.com/app/apikey
+2. Agree the agreement and create API Key.
+3. Copy the API key and paste it into the key input box of the chat website.
+
+---
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
