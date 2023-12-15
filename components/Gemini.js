@@ -11,7 +11,7 @@ export default function Gemini() {
 
   const [prompt, setPrompt] = useState('')
   const [text, setText] = useState('')
-  const [lang, setLang] = useState('繁體中文')
+  const [lang, setLang] = useState('英文')
   const [user, setUser] = useState('local')
   const [keys, setKeys] = useState(null)
   const [key, setKey] = useState(null)
