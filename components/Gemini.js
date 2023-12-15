@@ -6,6 +6,10 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 export default function Gemini() {
   const [prompt, setPrompt] = useState('')
   const [text, setText] = useState('')
+  const [lang, setLang] = useState('繁體中文')
+  const [user, setUser] = useState('local')
+  const [keys, setKeys] = useState(null)
+  const [key, setKey] = useState(null)
 
   const transform = (node, index) => {
     if (node.type === 'text' && node.data.match(/```(?:.*)```/)) {
@@ -21,30 +25,29 @@ export default function Gemini() {
   }
 
   const run = async keyword => {
-    const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_API_KEY)
+    const genAI = new GoogleGenerativeAI(key)
     const model = genAI.getGenerativeModel({ model: "gemini-pro" })
     const result = await model.generateContent(keyword)
     const response = await result.response
-    const newValue = [...text, response.text()]
-    const newValues = [ ...text, { q: prompt, a: response.text() }]
-    console.log(newValue)
-    setText(newValues)
+    const newValue = [ ...text, { q: prompt, a: response.text() }]
+    // console.log(newValue)
+    setText(newValue)
     setPrompt('')
   }
 
   return (
-    <div className='w-full h-full max-w-5xl'>
+    <div className='w-full h-full max-w-5xl pb-10'>
 
       <div className="group px-2 pb-3 text-lg text-black transition duration-300 ease-in-out">
         <span className='group-hover:text-red-500 transition duration-300 ease-in-out'>Hello</span>
-        <span className='font-bold'> Eddy</span>
+        <span className='font-bold'> {user}</span>
         <span className='group-hover:text-blue-500 transition duration-300 ease-in-out'> 請輸入問題：</span>
       </div>
 
       <p className='card'>
         {text && Object.values(text).map((m, idx) =>
           <div key={idx} className=''>
-            <p className='text-green-600' children='Me' />
+            <p className='text-green-600' children={user} />
             <p className='pb-3'>
               {ReactHtmlParser(marked.parse(m.q), option)}
             </p>
@@ -54,27 +57,61 @@ export default function Gemini() {
               {ReactHtmlParser(marked.parse(m.a), option)}
             </p>
 
-            <div class='border border-gray-300 drak:border-white' />
+            <div className='border border-gray-300 drak:border-white' />
           </div>
         )}
       </p>
-      <div className='flex h-20'>
-        <textarea
-          value={prompt}
-          className='h-full w-full border border-gray-500 rounded-lg mr-3 p-2 overflow-y-auto'
-          onChange={e => setPrompt(e.target.value)}
-          onKeyDown={e => e.code === 'Enter' && e.shiftKey && run(prompt)}
-        />
-        <button
-          className='h-10 px-3 bg-blue-300 rounded-full text-white font-bold'
-          onClick={() => run(`請以繁體中文回答問題：${prompt}`)}
-          children='RUN'
-        />
-        <button
-          className='h-10 ml-3 px-3 bg-red-300 rounded-full text-white font-bold'
-          onClick={() => setText('')}
-          children='clear'
-        />
+      <div className='h-20'>
+        {!key
+          ? (
+            <div>
+              <label>
+                請先輸入 Gemini API：
+                <input className='rounded-full h-8 w-[20vw] px-3' onChange={e => setKeys(e.target.value)} />
+                <button
+                  className='h-8 w-[100px] ml-3 px-3 bg-blue-300 rounded-full text-white font-bold'
+                  onClick={() => setKey(keys)}
+                  children='送出'
+                />
+              </label>
+              <hr className='border border-gray-300 dark:border-white my-3' />
+            </div>
+          )
+          : (
+            <textarea
+              value={prompt}
+              placeholder={!key && '請輸入 Gemini API'}
+              className='h-full w-full border border-gray-500 rounded-lg mr-3 p-2 overflow-y-auto'
+              onChange={e => setPrompt(e.target.value)}
+              onKeyDown={e => e.code === 'Enter' && e.shiftKey && run(prompt)}
+            />
+          )
+        }
+        <div className='flex justify-between mt-3'>
+          <div className='flex'>
+            <label>
+              請問如何稱呼？
+              <input className='rounded-full h-8 w-50 px-3 border border-gray-500' placeholder={`預設為 Local`} onChange={e => setUser(e.target.value)} />
+            </label>
+            <label className='ml-3'>
+              回答語言：
+              <input className='rounded-full h-8 w-50 px-3 border border-gray-500' placeholder={`預設為「英文」`} onChange={e => setLang(e.target.value)} />
+            </label>
+          </div>
+
+          <div className='flex'>
+            <button
+              className='h-10 w-[100px] px-3 bg-blue-300 rounded-full text-white font-bold'
+              onClick={() => run(`請以${lang}回答問題：${prompt}`)}
+              children='RUN'
+            />
+            <button
+              className='h-10 w-[100px] ml-3 px-3 bg-red-300 rounded-full text-white font-bold'
+              onClick={() => setText('')}
+              children='clear'
+            />
+          </div>
+        </div>
       </div>
     </div>
   )
