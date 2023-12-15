@@ -2,8 +2,13 @@ import { useState, useEffect } from 'react'
 import { marked } from 'marked'
 import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import useCookie from '@/hooks/use-cookie';
+import moment from 'moment-timezone'
 
 export default function Gemini() {
+  const deadline = moment(new Date(new Date().getFullYear(), new Date().getMonth(), (new Date().getDate() + 1))).tz('Asia/Taipei')._d
+  const [api, setApi, rmApi] = useCookie('g-api', null, { expires: deadline, path: '/' })
+
   const [prompt, setPrompt] = useState('')
   const [text, setText] = useState('')
   const [lang, setLang] = useState('繁體中文')
@@ -25,7 +30,7 @@ export default function Gemini() {
   }
 
   const run = async keyword => {
-    const genAI = new GoogleGenerativeAI(key)
+    const genAI = new GoogleGenerativeAI(api || key)
     const model = genAI.getGenerativeModel({ model: "gemini-pro" })
     const result = await model.generateContent(keyword)
     const response = await result.response
@@ -62,7 +67,7 @@ export default function Gemini() {
         )}
       </p>
       <div className='h-20'>
-        {!key
+        {(!api && !key)
           ? (
             <div>
               <label>
@@ -74,7 +79,10 @@ export default function Gemini() {
                 />
                 <button
                   className='h-8 w-[100px] ml-3 px-3 bg-blue-300 rounded-full text-white font-bold'
-                  onClick={() => setKey(keys)}
+                  onClick={() => {
+                    setKey(keys)
+                    setApi(keys)
+                  }}
                   children='送出'
                 />
               </label>
