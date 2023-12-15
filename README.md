@@ -1,7 +1,7 @@
-### Gemini Chat
+# Gemini Chat
 ---
 
-# How to Use?
+## How to Use?
 1. Sign in your google, and go to: https://makersuite.google.com/app/apikey
 2. Agree the agreement and create API Key.
 3. Copy the API key and paste it into the key input box of the chat website.
