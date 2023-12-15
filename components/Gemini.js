@@ -67,7 +67,11 @@ export default function Gemini() {
             <div>
               <label>
                 請先輸入 Gemini API：
-                <input className='rounded-full h-8 w-[20vw] px-3' onChange={e => setKeys(e.target.value)} />
+                <input
+                  placeholder='貼上 Key'
+                  className='rounded-full h-8 w-[20vw] px-3 border border-gray-500'
+                  onChange={e => setKeys(e.target.value)}
+                />
                 <button
                   className='h-8 w-[100px] ml-3 px-3 bg-blue-300 rounded-full text-white font-bold'
                   onClick={() => setKey(keys)}
