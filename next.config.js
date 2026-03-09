@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+    output: 'export',
+    basePath: '/tailwind-by-next-demo001',
+    reactStrictMode: true,
+    images: {
+          unoptimized: true,
+    },
 }
 
 module.exports = nextConfig
