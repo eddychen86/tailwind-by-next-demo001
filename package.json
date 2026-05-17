@@ -13,7 +13,7 @@
     "@vercel/speed-insights": "^1.0.12",
     "marked": "^11.1.0",
     "moment-timezone": "^0.5.43",
-    "next": "^14.2.13",
+    "next": "^15.5.16",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-html-parser": "^2.0.2",
